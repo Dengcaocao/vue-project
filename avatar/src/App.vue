@@ -1,12 +1,14 @@
 <template>
   <div class="main">
     <Layout class="layout">
-      <div class="canvas"></div>
-      <ActionBar />
-      <div class="btn-group">
-        <button class="btn-item">随机生成</button>
-        <button class="btn-item">下载头像</button>
-        <button class="btn-item">批量生成</button>
+      <div class="layout-content">
+        <div class="canvas"></div>
+        <ActionBar />
+        <div class="btn-group">
+          <button class="btn-item">随机生成</button>
+          <button class="btn-item">下载头像</button>
+          <button class="btn-item">批量生成</button>
+        </div>
       </div>
     </Layout>
     <Sider />
@@ -31,19 +33,25 @@ import ActionBar from './components/ActionBar.vue';
     transparent 100%
   );
   .layout {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+  }
+  .layout-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     .canvas {
       width: 240px;
       height: 240px;
       border-radius: 8px;
-      margin: 100px auto 80px auto;
+      margin-top: 100px;
       background-image: linear-gradient(90deg, #ffecd2, #fcb69f);
     }
     .btn-group {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 80px auto;
+      margin: 80px 0;
       .btn-item {
         border: none;
         outline: none;

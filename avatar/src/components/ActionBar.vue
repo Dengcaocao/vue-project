@@ -23,7 +23,7 @@ import Next from '@/components/icons/icon-next.svg'
   align-items: center;
   justify-content: space-between;
   width: 200px;
-  margin: 0 auto;
+  margin-top: 60px;
   padding: 8px 12px;
   border-radius: 40px;
   background-color: $color-gray;
