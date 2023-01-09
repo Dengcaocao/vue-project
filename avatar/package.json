@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "pinia": "^2.0.28",
-    "reset-css": "^5.0.1",
-    "sass": "^1.57.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
