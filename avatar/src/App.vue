@@ -2,7 +2,15 @@
   <div class="main">
     <Layout class="layout">
       <div class="layout-content">
-        <div class="canvas"></div>
+        <canvas
+          width="240"
+          height="240"
+          ref="canvas"
+          class="canvas"
+          @mousedown="drawStart"
+          @mousemove="move"
+          @mouseup="drawEnd"
+          @mouseleave="drawEnd"></canvas>
         <ActionBar />
         <div class="btn-group">
           <button class="btn-item">随机生成</button>
@@ -11,13 +19,55 @@
         </div>
       </div>
     </Layout>
-    <Sider />
+    <Sider @getConfig="setConfig" />
   </div>
 </template>
 <script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
 import Layout from './layout/index.vue'
 import Sider from './layout/sider.vue'
-import ActionBar from './components/ActionBar.vue';
+import ActionBar from './components/ActionBar.vue'
+
+const canvas: any = ref(null)
+const ctx: any = ref(null)
+let isStart = ref(false)
+let x = ref(0)
+let y = ref(0)
+
+let config: Object = reactive({
+  color: ''
+})
+
+function drawStart (e: MouseEvent) {
+  console.log(e)
+  ctx.value.beginPath()
+  isStart.value = true
+  x.value = e.offsetX
+  y.value = e.offsetY
+}
+
+function move (e: MouseEvent) {
+  if (!isStart.value) return
+  ctx.value.lineWidth = 5
+  ctx.value.strokeStyle = config.color
+  ctx.value.moveTo(x, y)
+  ctx.value.lineTo(e.offsetX, e.offsetY)
+  ctx.value.stroke()
+  x.value = e.offsetX
+  y.value = e.offsetY
+}
+function drawEnd () {
+  x.value = 0
+  y.value = 0
+  isStart.value = false
+  ctx.value.closePath()
+}
+function setConfig (v: Object) {
+  config = v
+}
+onMounted (() => {
+  ctx.value = canvas.value.getContext('2d')
+})
 </script>
 <style scoped lang="scss">
 @import './styles/var.scss';
@@ -44,11 +94,12 @@ import ActionBar from './components/ActionBar.vue';
     align-items: center;
     justify-content: center;
     .canvas {
-      width: 240px;
-      height: 240px;
-      border-radius: 8px;
+      // width: 240px;
+      // height: 240px;
+      // border-radius: 8px;
       margin-top: 100px;
-      background-image: linear-gradient(90deg, #ffecd2, #fcb69f);
+      // background-image: linear-gradient(90deg, #ffecd2, #fcb69f);
+      background-color: #fff;
     }
     .btn-group {
       margin: 80px 0;
