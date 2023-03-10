@@ -33,6 +33,7 @@ module.exports = {
     // vue
     // 'flow-vars/define-flow-type': 1,
     // 'flow-vars/use-flow-type': 1,
+    'vue/multi-word-component-names': 0,
 
     // react
     // 'react/jsx-uses-react': 2,
