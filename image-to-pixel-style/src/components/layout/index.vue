@@ -18,6 +18,7 @@ import Container from './container.vue'
 }
 .layout .container {
   flex: 1;
-  background-color: bisque;
+  height: 0;
+  overflow-y: auto;
 }
 </style>
