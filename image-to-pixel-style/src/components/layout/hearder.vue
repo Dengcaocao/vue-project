@@ -3,7 +3,7 @@
     <div class="logo-warp">
       <h2>Pixel Image</h2>
     </div>
-    <a class="store" href="" target="_blank">
+    <a class="store" href="https://github.com/Dengcaocao/vue-project" target="_blank">
       <img src="@/assets/github-fill.svg" alt="">
       <span>Github</span>
     </a>
@@ -19,7 +19,6 @@
   align-items: center;
   padding: 0 30px;
   height: 88px;
-  // background-color: #0e1116;
   .logo-warp {
     h2 {
       color: #fff;
