@@ -114,6 +114,7 @@ const drawPXCanvas = pxMap => {
 }
 
 const download = () => {
+  if (!imgName.value) return alert('暂无图片')
   const a: HTMLAnchorElement = document.createElement('a')
   a.href = canvas.value.toDataURL()
   a.download = imgName.value
