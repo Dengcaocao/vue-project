@@ -29,30 +29,46 @@ const uploadFile = () => {
   file.value.click()
 }
 
+interface ISizeInfo {
+  type: string,
+  value: number
+}
 const getFile = e => {
-  let width: number = 0
-  let height: number = 0
   const file: File = e.target.files[0]
   const url: string = URL.createObjectURL(file)
   const image: HTMLImageElement = new Image()
   image.src = url
   image.onload = () => {
-    if (image.width < window.innerWidth && image.height < window.innerHeight - 88) {
-      width = image.width
-      height = image.height
-    }
-    if (image.width > image.height) {
-      width = window.innerWidth
-      height = window.innerWidth * image.height / image.width
+    // // 计算宽高比
+    const imgScale: number = image.width / image.height
+    // 取最小值
+    const sizeInfo: ISizeInfo = window.innerWidth > (window.innerHeight - 88)
+      ? { type: 'height', value: window.innerHeight - 88 }
+      : { type: 'width', value: window.innerWidth }
+    // 减去头部得到的高度
+    const height = window.innerHeight - 88
+    if (sizeInfo.type === 'width') {
+      // 根据比例算出窗口需要的高度
+      const winNeedHeight: number = sizeInfo.value / imgScale
+      if (winNeedHeight > height) {
+        cvsW.value = height * imgScale
+        cvsH.value = height
+      } else {
+        cvsW.value = sizeInfo.value
+        cvsH.value = window.innerHeight > winNeedHeight ? winNeedHeight : window.innerHeight
+      }
     } else {
-      height = window.innerHeight
-      width = window.innerHeight * image.width / image.height
+      // 根据比例算出窗口需要的宽度
+      const winNeedWidth: number = sizeInfo.value * imgScale
+      if (winNeedWidth > window.innerWidth) {
+        cvsW.value = winNeedWidth
+        cvsH.value = window.innerWidth / imgScale
+      } else {
+        cvsH.value = sizeInfo.value
+        cvsW.value = window.innerWidth > winNeedWidth ? winNeedWidth : window.innerWidth
+      }
     }
-    cvsW.value = width
-    cvsH.value = height
-    setTimeout(() => {
-      drawImage(image, width, height)
-    }, 0)
+    setTimeout(() => drawImage(image, cvsW.value, cvsH.value), 0)
   }
 }
 
@@ -60,6 +76,39 @@ const canvas: any = ref(null)
 const drawImage = (img: HTMLImageElement, width: number, height: number) =>  {
   const ctx: CanvasRenderingContext2D = canvas.value.getContext('2d')
   ctx.drawImage(img, 0, 0, width, height)
+  const pxMap = createPxMap(ctx)
+  drawPXCanvas(pxMap)
+}
+
+const size = 10
+interface IColorblock {
+  x: number,
+  y: number,
+  color: string
+}
+function createPxMap (ctx){
+  const pxMap: IColorblock[] = []
+  for (let i = 0; i < cvsW.value; i += size) {
+    for (let j = 0; j < cvsH.value; j += size) {
+      const pixel = ctx.getImageData(i, j, 1, 1).data
+      const color = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${pixel[3]/255})`
+      pxMap.push({
+        x: i / size,
+        y: j / size,
+        color
+      })
+     }
+   }
+  return pxMap
+}
+
+function drawPXCanvas (pxMap) {
+  const ctx = canvas.value.getContext('2d')
+  pxMap.forEach(px => {
+    const { color, x, y } = px
+    ctx.fillStyle = color
+    ctx.fillRect(x * size, y * size, size, size)
+   })
 }
 </script>
 
@@ -70,6 +119,7 @@ const drawImage = (img: HTMLImageElement, width: number, height: number) =>  {
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 100%;
   .canvas {
     background-color: #fff;
   }
