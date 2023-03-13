@@ -8,7 +8,7 @@
           <span>上传图片</span>
         </button>
         <input style="display: none;" type="file" ref="file" @change="getFile">
-        <button class="download" ref="download">
+        <button class="download" ref="download" @click="download">
           <img src="@/assets/download.svg" />
           <span>下载</span>
         </button>
@@ -21,6 +21,7 @@
 import { ref } from 'vue'
 import Layout from './components/layout/index.vue'
 
+let imgName = ref('')
 let cvsW = ref(0)
 let cvsH = ref(0)
 
@@ -35,6 +36,7 @@ interface ISizeInfo {
 }
 const getFile = e => {
   const file: File = e.target.files[0]
+  imgName.value = file.name
   const url: string = URL.createObjectURL(file)
   const image: HTMLImageElement = new Image()
   image.src = url
@@ -86,7 +88,7 @@ interface IColorblock {
   y: number,
   color: string
 }
-function createPxMap (ctx){
+const createPxMap = ctx => {
   const pxMap: IColorblock[] = []
   for (let i = 0; i < cvsW.value; i += size) {
     for (let j = 0; j < cvsH.value; j += size) {
@@ -102,13 +104,23 @@ function createPxMap (ctx){
   return pxMap
 }
 
-function drawPXCanvas (pxMap) {
+const drawPXCanvas = pxMap => {
   const ctx = canvas.value.getContext('2d')
   pxMap.forEach(px => {
     const { color, x, y } = px
     ctx.fillStyle = color
     ctx.fillRect(x * size, y * size, size, size)
    })
+}
+
+const download = () => {
+  const a: HTMLAnchorElement = document.createElement('a')
+  a.href = canvas.value.toDataURL()
+  a.download = imgName.value
+  a.style.display = 'none'
+  document.body.append(a)
+  a.click()
+  a.parentNode?.removeChild(a)
 }
 </script>
 
