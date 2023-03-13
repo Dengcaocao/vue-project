@@ -5,12 +5,12 @@
       <div class="action">
         <button class="upload" ref="upload" @click="uploadFile">
           <img src="@/assets/upload.svg" />
-          上传图片
+          <span>上传图片</span>
         </button>
         <input style="display: none;" type="file" ref="file" @change="getFile">
         <button class="download" ref="download">
           <img src="@/assets/download.svg" />
-          下载
+          <span>下载</span>
         </button>
       </div>
     </div>
@@ -80,7 +80,7 @@ const drawImage = (img: HTMLImageElement, width: number, height: number) =>  {
   drawPXCanvas(pxMap)
 }
 
-const size = 10
+const size = 8
 interface IColorblock {
   x: number,
   y: number,
@@ -127,17 +127,24 @@ function drawPXCanvas (pxMap) {
     position: absolute;
     top: 30px;
     right: 30px;
+    display: flex;
+    align-items: center;
     button {
+      overflow: hidden;
+      display: flex;
+      align-items: center;
       border: 0;
       outline: none;
       font-size: 16px;
       padding: 6px 12px;
       cursor: pointer;
-      color: var(--color-text);
-      background-color: var(--vt-c-text-light-2);
+      color: #fff;
+      border-radius: 4px;
+      background-color: #41474d;
       img {
         width: 26px;
-        vertical-align: middle;
+        filter: drop-shadow(#fff 100px 0);
+        transform: translateX(-100px);
       }
     }
     .upload {
